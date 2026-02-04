@@ -25,7 +25,7 @@ class ArrtickApp extends StatelessWidget {
     return MaterialApp.router(
       title: 'Arrtick App',
       routerConfig: _router,
-      themeMode: ThemeMode.light,
+      themeMode: ThemeMode.dark,
       theme: buildThemeData(kColorScheme),
       darkTheme: buildThemeData(kDarkColorScheme),
     );
