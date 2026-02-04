@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import 'package:arrtick_app/providers/project_provider.dart';
 import 'package:arrtick_app/models/project.dart';
 import 'package:arrtick_app/util.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class AddProject extends ConsumerStatefulWidget {
-  const AddProject({super.key});
+  final String? projectId;
+  const AddProject({super.key, this.projectId});
 
   @override
   ConsumerState<AddProject> createState() => _AddProjectState();
@@ -17,17 +19,38 @@ class _AddProjectState extends ConsumerState<AddProject> {
   var _enteredName = '';
   var _enteredDescription = '';
   var _selectedStartDate = DateTime.now();
-  var _selectedEndDate = DateTime.now();
+  var _selectedEstEndDate = DateTime.now();
+  late Project _projectToEdit;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.projectId != null) {
+      final projectNotifier = ref.read(projectProvider.notifier);
+      final existingProject = projectNotifier.getProjectById(widget.projectId!);
+      _projectToEdit = existingProject!;
+
+      _enteredName = existingProject.name;
+      _enteredDescription = existingProject.description;
+      _selectedStartDate = existingProject.startDate;
+      _selectedEstEndDate = existingProject.estimatedEndDate;
+      _projectToEdit = existingProject;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Add Project')),
+      appBar: AppBar(
+        title: Text(widget.projectId == null ? 'Add Project' : 'Edit Project'),
+      ),
       body: ListView(
         padding: const EdgeInsets.all(16.0),
         children: [
           Text(
-            'Start getting organized by creating a new project',
+            widget.projectId == null
+                ? 'Start getting organized by creating a new project'
+                : 'Edit your project details',
             style: Theme.of(context).textTheme.headlineSmall!.copyWith(
               fontWeight: FontWeight.bold,
               wordSpacing: 2.0,
@@ -40,6 +63,7 @@ class _AddProjectState extends ConsumerState<AddProject> {
             child: Column(
               children: [
                 TextFormField(
+                  initialValue: _enteredName,
                   decoration: const InputDecoration(labelText: 'Project Name'),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -53,6 +77,7 @@ class _AddProjectState extends ConsumerState<AddProject> {
                 ),
                 const SizedBox(height: 16),
                 TextFormField(
+                  initialValue: _enteredDescription,
                   decoration: const InputDecoration(labelText: 'Description'),
                   maxLines: 4,
                   validator: (value) {
@@ -87,7 +112,7 @@ class _AddProjectState extends ConsumerState<AddProject> {
                         if (response != null) {
                           setState(() {
                             _selectedStartDate = response;
-                            _selectedEndDate = response;
+                            _selectedEstEndDate = response;
                           });
                         }
                       },
@@ -106,7 +131,7 @@ class _AddProjectState extends ConsumerState<AddProject> {
                         fontSize: 16,
                       ),
                     ),
-                    Text(formatDate(_selectedEndDate)),
+                    Text(formatDate(_selectedEstEndDate)),
                     IconButton(
                       onPressed: () async {
                         var today = DateTime.now();
@@ -118,7 +143,7 @@ class _AddProjectState extends ConsumerState<AddProject> {
                         if (response != null &&
                             response.isAfter(_selectedStartDate)) {
                           setState(() {
-                            _selectedEndDate = response;
+                            _selectedEstEndDate = response;
                           });
                         }
                       },
@@ -135,7 +160,9 @@ class _AddProjectState extends ConsumerState<AddProject> {
             style: ElevatedButton.styleFrom(
               minimumSize: const Size.fromHeight(48),
             ),
-            child: const Text('Create Project'),
+            child: Text(
+              widget.projectId == null ? 'Create Project' : 'Save Changes',
+            ),
           ),
         ],
       ),
@@ -156,23 +183,42 @@ class _AddProjectState extends ConsumerState<AddProject> {
     }
     _formKey.currentState!.save();
     // Here you can handle the form submission, e.g., save the project data
-    final newProject = Project(
-      id: generateId(),
-      name: _enteredName,
-      description: _enteredDescription,
-      startDate: _selectedStartDate,
-      estimatedEndDate: _selectedEndDate,
-    );
 
-    // Using Riverpod to add the new project
+    // Using Riverpod to add the new project to the state
     final projectNotifier = ref.read(projectProvider.notifier);
-    projectNotifier.addProject(newProject);
+    if (widget.projectId == null) {
+      final newProject = Project(
+        id: generateId(),
+        name: _enteredName,
+        description: _enteredDescription,
+        startDate: _selectedStartDate,
+        estimatedEndDate: _selectedEstEndDate,
+      );
+      projectNotifier.addProject(newProject);
+    } else {
+      // Editing existing project
+      final updatedProject = Project(
+        id: _projectToEdit.id,
+        name: _enteredName,
+        description: _enteredDescription,
+        startDate: _selectedStartDate,
+        estimatedEndDate: _selectedEstEndDate,
+        endDate: _projectToEdit.endDate,
+        isCompleted: _projectToEdit.isCompleted,
+        isFavorite: _projectToEdit.isFavorite,
+      );
+      projectNotifier.updateProject(updatedProject);
+    }
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content: Text('Project "${newProject.name}" created successfully!'),
+        content: Text(
+          widget.projectId == null
+              ? 'Project "$_enteredName" created successfully!'
+              : 'Project "$_enteredName" updated successfully!',
+        ),
       ),
     );
-    // Navigator.of(context).pop();
+    context.go("/");
   }
 }
