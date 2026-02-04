@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:arrtick_app/theme.dart';
+
 class AppLayout extends StatefulWidget {
   const AppLayout({super.key});
 
@@ -42,6 +44,7 @@ class _AppLayoutState extends State<AppLayout> {
       body: _pages[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
         items: _buildBottomNavBarItems(),
+        currentIndex: _selectedIndex,
         onTap: (value) {
           setState(() {
             _selectedIndex = value;
@@ -57,14 +60,35 @@ class _AppLayoutState extends State<AppLayout> {
         icon: Icon(Icons.home_outlined),
         label: 'Home',
       ),
-      const BottomNavigationBarItem(
-        icon: Icon(Icons.add_outlined),
-        label: 'Add',
-      ),
+      BottomNavigationBarItem(icon: _buildAddButton(), label: ''),
       const BottomNavigationBarItem(
         icon: Icon(Icons.category_outlined),
         label: 'Manage',
       ),
     ];
+  }
+
+  Widget _buildAddButton() {
+    return Container(
+      width: 48,
+      height: 48,
+      decoration: BoxDecoration(
+        color: yellowColor,
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),
+            spreadRadius: 2,
+            blurRadius: 5,
+            offset: const Offset(0, 3),
+          ),
+        ],
+      ),
+      child: Icon(
+        Icons.add,
+        color: Theme.of(context).colorScheme.surface,
+        size: 32,
+      ),
+    );
   }
 }

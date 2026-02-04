@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:arrtick_app/theme.dart';
 import 'package:arrtick_app/screens/app_layout.dart';
 
 void main() {
@@ -17,6 +18,12 @@ class ArrtickApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp.router(title: 'Arrtick App', routerConfig: _router);
+    return MaterialApp.router(
+      title: 'Arrtick App',
+      routerConfig: _router,
+      themeMode: ThemeMode.light,
+      theme: buildThemeData(kColorScheme),
+      darkTheme: buildThemeData(kDarkColorScheme),
+    );
   }
 }
