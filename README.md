@@ -1,16 +1,35 @@
 # arrtick_app
 
-A new Flutter project.
+## 📱 About
 
-## Getting Started
+An application that helps users manage their tasks and projects to increase productivity.
 
-This project is a starting point for a Flutter application.
+## ✨ Features
 
-A few resources to get you started if this is your first Flutter project:
+- Create and organize tasks
+- Manage multiple projects
+- Track progress and deadlines
+- Boost your productivity
 
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Flutter SDK installed
+- Dart 2.17 or higher
+
+### Installation
+
+1. Clone the repository
+2. Run `flutter pub get`
+3. Run `flutter run`
+
+## 📚 Resources
+
+- [Flutter Documentation](https://docs.flutter.dev/)
 - [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
 - [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## 📄 License
+
+This project is licensed under the MIT License.
