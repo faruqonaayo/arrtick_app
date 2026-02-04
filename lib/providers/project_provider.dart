@@ -11,6 +11,36 @@ class ProjectNotifier extends Notifier<List<Project>> {
   void addProject(Project project) {
     state = [...state, project];
   }
+
+  void updateProject(Project updatedProject) {
+    state = state
+        .map(
+          (project) =>
+              project.id == updatedProject.id ? updatedProject : project,
+        )
+        .toList();
+  }
+
+  void deleteProject(String projectId) {
+    state = state.where((project) => project.id != projectId).toList();
+  }
+
+  Project? getProjectById(String projectId) {
+    try {
+      return state.firstWhere((project) => project.id == projectId);
+    } catch (e) {
+      return null;
+    }
+  }
+
+  void toggleFavoriteStatus(String projectId) {
+    state = state.map((project) {
+      if (project.id == projectId) {
+        project.isFavorite = !project.isFavorite;
+      }
+      return project;
+    }).toList();
+  }
 }
 
 final projectProvider = NotifierProvider<ProjectNotifier, List<Project>>(

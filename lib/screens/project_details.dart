@@ -1,88 +1,126 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 
+import 'package:arrtick_app/models/project.dart';
 import 'package:arrtick_app/util.dart';
 import 'package:arrtick_app/providers/project_provider.dart';
 
-class ProjectDetails extends ConsumerWidget {
+class ProjectDetails extends ConsumerStatefulWidget {
   final String projectId;
 
   const ProjectDetails({super.key, required this.projectId});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<ProjectDetails> createState() {
+    return _ProjectDetailsState();
+  }
+}
+
+class _ProjectDetailsState extends ConsumerState<ProjectDetails> {
+  late String _projectId;
+  late Project? _project;
+  late bool _isFavorite;
+  late ProjectNotifier _projectNotifier;
+
+  @override
+  void initState() {
+    super.initState();
+    _projectNotifier = ref.read(projectProvider.notifier);
+    _project = _projectNotifier.getProjectById(widget.projectId);
+    _isFavorite = _project?.isFavorite ?? false;
+    _projectId = widget.projectId;
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     final colorScheme = Theme.of(context).colorScheme;
 
-    final project = ref
-        .watch(projectProvider)
-        .firstWhere((p) => p.id == projectId);
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Project Details'),
-        actions: [
-          IconButton(
-            onPressed: () {},
-            icon: Icon(
-              project.isFavorite ? Icons.star : Icons.star_border,
-              color: project.isFavorite ? Colors.amber : Colors.grey,
+    return _project == null
+        ? Scaffold(
+            appBar: AppBar(title: const Text('Project Details')),
+            body: const Center(child: Text('Project not found.')),
+          )
+        : Scaffold(
+            appBar: AppBar(
+              title: const Text('Project Details'),
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    setState(() {
+                      _isFavorite = !_isFavorite;
+                      _projectNotifier.toggleFavoriteStatus(_projectId);
+                    });
+                  },
+                  icon: Icon(
+                    _isFavorite ? Icons.star : Icons.star_border,
+                    color: _isFavorite ? Colors.amber : Colors.grey,
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
-      body: ListView(
-        padding: const EdgeInsets.all(16.0),
-        children: [
-          Text(
-            project.name,
-            style: textTheme.headlineSmall!.copyWith(
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
-            decoration: BoxDecoration(
-              color: project.isCompleted
-                  ? Colors.greenAccent.withValues(alpha: 0.2)
-                  : Colors.orangeAccent.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(4.0),
-            ),
-            child: Text(
-              project.isCompleted ? 'Completed' : 'In Progress',
-              style: textTheme.bodyMedium!.copyWith(
-                color: project.isCompleted
-                    ? Colors.greenAccent.withValues(alpha: 0.8)
-                    : Colors.orangeAccent.withValues(alpha: 0.8),
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-          const SizedBox(height: 16),
-          _buildStartAndEndDateRow(
-            context,
-            project.startDate,
-            project.estimatedEndDate,
-          ),
-          const SizedBox(height: 32),
-          Text(
-            'Description',
-            style: textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
-          ),
-          Text(
-            project.description,
-            style: textTheme.bodyMedium!.copyWith(color: colorScheme.secondary),
-          ),
+            body: ListView(
+              padding: const EdgeInsets.all(16.0),
+              children: [
+                Text(
+                  _project!.name,
+                  style: textTheme.headlineSmall!.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                const SizedBox(height: 8),
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 4,
+                    horizontal: 8,
+                  ),
+                  decoration: BoxDecoration(
+                    color: _project!.isCompleted
+                        ? Colors.greenAccent.withValues(alpha: 0.2)
+                        : Colors.orangeAccent.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(4.0),
+                  ),
+                  child: Text(
+                    _project!.isCompleted ? 'Completed' : 'In Progress',
+                    style: textTheme.bodyMedium!.copyWith(
+                      color: _project!.isCompleted
+                          ? Colors.greenAccent.withValues(alpha: 0.8)
+                          : Colors.orangeAccent.withValues(alpha: 0.8),
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 16),
+                _buildStartAndEndDateRow(
+                  context,
+                  _project!.startDate,
+                  _project!.estimatedEndDate,
+                ),
+                const SizedBox(height: 32),
+                Text(
+                  'Description',
+                  style: textTheme.titleMedium!.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  _project!.description,
+                  style: textTheme.bodyMedium!.copyWith(
+                    color: colorScheme.secondary,
+                  ),
+                ),
 
-          const SizedBox(height: 32),
-          Text(
-            'Tasks',
-            style: textTheme.titleMedium!.copyWith(fontWeight: FontWeight.bold),
-          ),
-        ],
-      ),
-    );
+                const SizedBox(height: 32),
+                Text(
+                  'Tasks',
+                  style: textTheme.titleMedium!.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          );
   }
 
   Widget _buildStartEndDateColumn(

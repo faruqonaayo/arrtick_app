@@ -6,9 +6,9 @@ class Project {
   final DateTime estimatedEndDate;
   final DateTime? endDate;
   final bool isCompleted;
-  final bool isFavorite;
+  bool isFavorite;
 
-  const Project({
+  Project({
     required this.id,
     required this.name,
     required this.description,
