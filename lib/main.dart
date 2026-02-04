@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:arrtick_app/screens/add_project.dart';
 import 'package:arrtick_app/theme.dart';
 import 'package:arrtick_app/screens/app_layout.dart';
 
@@ -13,7 +14,10 @@ class ArrtickApp extends StatelessWidget {
 
   final _router = GoRouter(
     initialLocation: "/",
-    routes: [GoRoute(path: "/", builder: (context, state) => AppLayout())],
+    routes: [
+      GoRoute(path: "/", builder: (context, state) => AppLayout()),
+      GoRoute(path: "/project/new", builder: (context, state) => AddProject()),
+    ],
   );
 
   @override

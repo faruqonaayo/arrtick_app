@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class AddOptions extends StatelessWidget {
   const AddOptions({super.key});
@@ -22,7 +23,9 @@ class AddOptions extends StatelessWidget {
               title: Text('Add new project'),
               trailing: Icon(Icons.chevron_right),
               onTap: () {
-                // Handle add new project action
+                // Handle add new project action by going to the add project screen
+                Navigator.of(context).pop(); // Close the bottom sheet
+                context.push("/project/new");
               },
             ),
             ListTile(

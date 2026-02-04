@@ -30,5 +30,19 @@ ThemeData buildThemeData(ColorScheme cs) {
       bodyColor: cs.onSurface,
       displayColor: cs.onSurface,
     ),
+    inputDecorationTheme: InputDecorationTheme(
+      border: OutlineInputBorder(
+        borderRadius: BorderRadius.circular(4),
+        borderSide: BorderSide(color: cs.outline),
+      ),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData(
+      style: ElevatedButton.styleFrom(
+        backgroundColor: yellowColor,
+        foregroundColor: Color.fromRGBO(34, 40, 49, 1.0),
+        textStyle: TextStyle(fontWeight: FontWeight.w600, letterSpacing: 1.1),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.zero),
+      ),
+    ),
   );
 }
