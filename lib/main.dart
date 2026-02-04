@@ -1,16 +1,25 @@
-import 'package:arrtick_app/providers/dark_mode_provider.dart';
-import 'package:arrtick_app/screens/project_details.dart';
-import 'package:arrtick_app/screens/settings.dart';
+import 'package:arrtick_app/providers/provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:arrtick_app/providers/dark_mode_provider.dart';
+import 'package:arrtick_app/screens/project_details.dart';
+import 'package:arrtick_app/screens/settings.dart';
 import 'package:arrtick_app/screens/add_project.dart';
 import 'package:arrtick_app/theme.dart';
 import 'package:arrtick_app/screens/app_layout.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-  runApp(ProviderScope(child: ArrtickApp()));
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  final sharedPrefInstance = await SharedPreferences.getInstance();
+  runApp(
+    ProviderScope(
+      overrides: [sharedPrefProvider.overrideWith((ref) => sharedPrefInstance)],
+      child: ArrtickApp(),
+    ),
+  );
 }
 
 class ArrtickApp extends ConsumerWidget {
