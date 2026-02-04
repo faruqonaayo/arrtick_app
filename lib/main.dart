@@ -1,20 +1,22 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+import 'package:arrtick_app/screens/app_layout.dart';
 
 void main() {
-  runApp(const ArrtickApp());
+  runApp(ArrtickApp());
 }
 
 class ArrtickApp extends StatelessWidget {
-  const ArrtickApp({super.key});
+  ArrtickApp({super.key});
+
+  final _router = GoRouter(
+    initialLocation: "/",
+    routes: [GoRoute(path: "/", builder: (context, state) => AppLayout())],
+  );
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Arrtick App',
-      home: Scaffold(
-        appBar: AppBar(title: const Text('Arrtick Home Page')),
-        body: const Center(child: Text('Welcome to Arrtick!')),
-      ),
-    );
+    return MaterialApp.router(title: 'Arrtick App', routerConfig: _router);
   }
 }
