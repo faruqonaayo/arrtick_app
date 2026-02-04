@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:arrtick_app/models/project.dart';
 import 'package:arrtick_app/theme.dart';
 import 'package:arrtick_app/util.dart';
+import 'package:go_router/go_router.dart';
 
 class ProjectCard extends StatelessWidget {
   final Project project;
@@ -57,7 +58,8 @@ class ProjectCard extends StatelessWidget {
               ),
 
         onTap: () {
-          // Handle project card tap if needed
+          // Handle project card tap to go to project details
+          context.push('/project/${project.id}');
         },
       ),
     );
