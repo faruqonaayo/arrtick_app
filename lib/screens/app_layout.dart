@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:arrtick_app/screens/manage.dart';
 import 'package:arrtick_app/widgets/add_options.dart';
 import 'package:arrtick_app/theme.dart';
 
@@ -16,7 +17,7 @@ class _AppLayoutState extends State<AppLayout> {
   final _pages = [
     const Center(child: Text('Home Page')),
     const Center(child: Text('Add Page')),
-    const Center(child: Text('Manage Page')),
+    const Manage(),
   ];
 
   @override

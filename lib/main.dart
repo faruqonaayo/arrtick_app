@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:arrtick_app/screens/add_project.dart';
@@ -6,7 +7,7 @@ import 'package:arrtick_app/theme.dart';
 import 'package:arrtick_app/screens/app_layout.dart';
 
 void main() {
-  runApp(ArrtickApp());
+  runApp(ProviderScope(child: ArrtickApp()));
 }
 
 class ArrtickApp extends StatelessWidget {
@@ -25,7 +26,7 @@ class ArrtickApp extends StatelessWidget {
     return MaterialApp.router(
       title: 'Arrtick App',
       routerConfig: _router,
-      themeMode: ThemeMode.dark,
+      themeMode: ThemeMode.light,
       theme: buildThemeData(kColorScheme),
       darkTheme: buildThemeData(kDarkColorScheme),
     );

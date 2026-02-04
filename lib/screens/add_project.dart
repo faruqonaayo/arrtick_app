@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 
+import 'package:arrtick_app/providers/project_provider.dart';
 import 'package:arrtick_app/models/project.dart';
 import 'package:arrtick_app/util.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class AddProject extends StatefulWidget {
+class AddProject extends ConsumerStatefulWidget {
   const AddProject({super.key});
 
   @override
-  State<AddProject> createState() => _AddProjectState();
+  ConsumerState<AddProject> createState() => _AddProjectState();
 }
 
-class _AddProjectState extends State<AddProject> {
+class _AddProjectState extends ConsumerState<AddProject> {
   final _formKey = GlobalKey<FormState>();
   var _enteredName = '';
   var _enteredDescription = '';
@@ -161,6 +163,10 @@ class _AddProjectState extends State<AddProject> {
       startDate: _selectedStartDate,
       estimatedEndDate: _selectedEndDate,
     );
+
+    // Using Riverpod to add the new project
+    final projectNotifier = ref.read(projectProvider.notifier);
+    projectNotifier.addProject(newProject);
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
