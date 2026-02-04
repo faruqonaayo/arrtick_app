@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:arrtick_app/screens/manage.dart';
 import 'package:arrtick_app/widgets/add_options.dart';
 import 'package:arrtick_app/theme.dart';
+import 'package:go_router/go_router.dart';
 
 class AppLayout extends StatefulWidget {
   const AppLayout({super.key});
@@ -38,7 +39,7 @@ class _AppLayoutState extends State<AppLayout> {
           IconButton(
             icon: const Icon(Icons.settings_outlined),
             onPressed: () {
-              // Handle settings action
+              context.push('/settings');
             },
           ),
         ],

@@ -1,4 +1,6 @@
+import 'package:arrtick_app/providers/dark_mode_provider.dart';
 import 'package:arrtick_app/screens/project_details.dart';
+import 'package:arrtick_app/screens/settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -11,7 +13,7 @@ void main() {
   runApp(ProviderScope(child: ArrtickApp()));
 }
 
-class ArrtickApp extends StatelessWidget {
+class ArrtickApp extends ConsumerWidget {
   ArrtickApp({super.key});
 
   final _router = GoRouter(
@@ -27,15 +29,17 @@ class ArrtickApp extends StatelessWidget {
           return ProjectDetails(projectId: projectId);
         },
       ),
+      GoRoute(path: "/settings", builder: (context, state) => const Settings()),
     ],
   );
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isDarkMode = ref.watch(darkModeProvider);
     return MaterialApp.router(
       title: 'Arrtick App',
       routerConfig: _router,
-      themeMode: ThemeMode.light,
+      themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
       theme: buildThemeData(kColorScheme),
       darkTheme: buildThemeData(kDarkColorScheme),
     );
