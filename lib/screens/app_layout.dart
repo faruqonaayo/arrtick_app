@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:arrtick_app/widgets/add_options.dart';
 import 'package:arrtick_app/theme.dart';
 
 class AppLayout extends StatefulWidget {
@@ -47,6 +48,14 @@ class _AppLayoutState extends State<AppLayout> {
         currentIndex: _selectedIndex,
         onTap: (value) {
           setState(() {
+            if (value == 1) {
+              // Handle add button tap separately if needed
+              showModalBottomSheet(
+                context: context,
+                builder: (ctx) => AddOptions(),
+              );
+              return;
+            }
             _selectedIndex = value;
           });
         },
