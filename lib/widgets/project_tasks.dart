@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:arrtick_app/widgets/confirm_delete.dart';
 import 'package:arrtick_app/models/project.dart';
 import 'package:arrtick_app/models/task.dart';
 import 'package:arrtick_app/providers/task_provider.dart';
@@ -123,8 +124,8 @@ class _ProjectTasksState extends ConsumerState<ProjectTasks> {
           borderRadius: BorderRadius.circular(8),
           gradient: LinearGradient(
             colors: [
-              toggleColor.withValues(alpha: 0.1),
-              toggleColor.withValues(alpha: 0.2),
+              toggleColor.withValues(alpha: 0.04),
+              toggleColor.withValues(alpha: 0.08),
             ],
           ),
         ),
@@ -138,12 +139,50 @@ class _ProjectTasksState extends ConsumerState<ProjectTasks> {
             task.title,
             style: textTheme.titleMedium!.copyWith(
               color: colorScheme.primary,
-              fontWeight: FontWeight.w700,
+              fontWeight: FontWeight.bold,
             ),
           ),
-          subtitle: Text(
-            "Date: ${formatDate(task.startDate)} | Time: ${task.startTime} - ${task.endTime}",
-            style: textTheme.bodySmall?.copyWith(color: colorScheme.secondary),
+          subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(height: 4),
+              Text(
+                task.note,
+                style: textTheme.bodyMedium?.copyWith(
+                  color: colorScheme.secondary,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              SizedBox(height: 4),
+              Text(
+                "Date: ${formatDate(task.startDate)} | Time: ${task.startTime} - ${task.endTime}",
+                style: textTheme.bodySmall?.copyWith(
+                  color: colorScheme.tertiary,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              const SizedBox(height: 4),
+              IconButton(
+                onPressed: () async {
+                  await showDialog(
+                    context: context,
+                    builder: (ctx) => ConfirmDelete(
+                      itemName: task.title,
+                      itemId: task.id,
+                      deleteFunction: (itemId) {
+                        _taskNotifier.deleteTask(itemId);
+                      },
+                    ),
+                  );
+                  setState(() {
+                    _projectTasks = _taskNotifier.getTasksByProjectId(
+                      widget.project.id,
+                    );
+                  });
+                },
+                icon: Icon(Icons.delete, color: Colors.redAccent, size: 16),
+              ),
+            ],
           ),
           trailing: Text(
             task.priority,
@@ -155,9 +194,6 @@ class _ProjectTasksState extends ConsumerState<ProjectTasks> {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(8.0),
           ),
-          onTap: () {
-            // Optionally handle task item tap
-          },
         ),
       ),
     );

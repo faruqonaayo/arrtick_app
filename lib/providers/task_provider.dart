@@ -17,6 +17,10 @@ class TaskNotifier extends Notifier<List<Task>> {
     return state.where((task) => task.projectId == projectId).toList();
   }
 
+  void deleteTask(String taskId) {
+    state = state.where((task) => task.id != taskId).toList();
+  }
+
   List<Task> toggleTaskCompletion(String taskId, String projectId) {
     state = sortTaskOptimally(
       state.map((task) {
@@ -77,7 +81,8 @@ List<Task> _dummyTasks = [
   Task(
     id: 'task_001',
     title: 'Redesign Login Screen',
-    note: 'Update UI elements and improve UX',
+    note:
+        'Update UI elements and improve UX jkdfjhagijahijdfhaij jdsfjhkjfdahkjhfdkjhafhajhdj  fhdbfjdajjdfhlajhfjhl hjdajldfgjl',
     startDate: DateTime(2024, 01, 15),
     startTime: '09:00 AM',
     endTime: '11:00 AM',
