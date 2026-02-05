@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import 'package:arrtick_app/widgets/project_tasks.dart';
 import 'package:arrtick_app/models/project.dart';
 import 'package:arrtick_app/util.dart';
 import 'package:arrtick_app/providers/project_provider.dart';
@@ -126,6 +127,7 @@ class _ProjectDetailsState extends ConsumerState<ProjectDetails> {
                     fontWeight: FontWeight.bold,
                   ),
                 ),
+                ProjectTasks(project: _project!),
               ],
             ),
           );

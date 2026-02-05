@@ -1,14 +1,71 @@
-import 'package:arrtick_app/models/task.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:arrtick_app/models/task.dart';
+import 'package:arrtick_app/models/task_priority.dart';
 
 class TaskNotifier extends Notifier<List<Task>> {
   @override
   List<Task> build() {
-    return _dummyTasks;
+    return sortTaskOptimally(_dummyTasks);
   }
 
   void addTask(Task task) {
-    state = [...state, task];
+    state = sortTaskOptimally([...state, task]);
+  }
+
+  List<Task> getTasksByProjectId(String projectId) {
+    return state.where((task) => task.projectId == projectId).toList();
+  }
+
+  List<Task> toggleTaskCompletion(String taskId, String projectId) {
+    state = sortTaskOptimally(
+      state.map((task) {
+        if (task.id == taskId && task.projectId == projectId) {
+          return Task(
+            id: task.id,
+            title: task.title,
+            note: task.note,
+            startDate: task.startDate,
+            startTime: task.startTime,
+            endTime: task.endTime,
+            isChecked: !task.isChecked,
+            priority: task.priority,
+            projectId: task.projectId,
+          );
+        }
+        return task;
+      }).toList(),
+    );
+
+    return getTasksByProjectId(projectId);
+  }
+
+  List<Task> sortTaskOptimally(List<Task> tasks) {
+    List<Task> sortedList = List.from(tasks);
+    const priorityEnum = TaskPriority.values;
+    sortedList.sort((a, b) {
+      // First, compare by startDate
+      int dateCompare = a.startDate.compareTo(b.startDate);
+      if (dateCompare != 0) return dateCompare;
+
+      // If dates are equal, compare by startTime
+      int timeCompare = a.startTime.compareTo(b.startTime);
+      if (timeCompare != 0) return timeCompare;
+
+      // If time are equal, compare by priority
+      int aPriority = priorityEnum
+          .where((p) => p.label == a.priority)
+          .first
+          .value;
+      int bPriority = priorityEnum
+          .where((p) => p.label == b.priority)
+          .first
+          .value;
+
+      return bPriority.compareTo(aPriority);
+    });
+
+    return sortedList;
   }
 }
 
@@ -76,7 +133,7 @@ List<Task> _dummyTasks = [
     id: 'task_006',
     title: 'API Endpoint Caching',
     note: 'Reduce server load by caching frequent requests',
-    startDate: DateTime(2024, 02, 25),
+    startDate: DateTime(2023, 02, 25),
     startTime: '02:00 PM',
     endTime: '04:00 PM',
     isChecked: true,
@@ -87,11 +144,22 @@ List<Task> _dummyTasks = [
     id: 'task_007',
     title: 'Redesign Profile Screen',
     note: 'Align with new design system',
-    startDate: DateTime(2024, 01, 18),
+    startDate: DateTime(2022, 01, 18),
     startTime: '10:00 AM',
     endTime: '12:00 PM',
     isChecked: false,
     priority: 'Medium',
+    projectId: 'proj_001',
+  ),
+  Task(
+    id: 'task_0011',
+    title: 'Cool',
+    note: 'Align with new design system',
+    startDate: DateTime(2022, 01, 18),
+    startTime: '11:00 AM',
+    endTime: '12:00 PM',
+    isChecked: false,
+    priority: 'High',
     projectId: 'proj_001',
   ),
   Task(
