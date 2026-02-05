@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:arrtick_app/providers/task_provider.dart';
 import 'package:arrtick_app/models/project.dart';
 import 'package:arrtick_app/models/task.dart';
 import 'package:arrtick_app/models/task_priority.dart';
 import 'package:arrtick_app/providers/project_provider.dart';
 import 'package:arrtick_app/util.dart';
+import 'package:go_router/go_router.dart';
 
 class AddTask extends ConsumerStatefulWidget {
   const AddTask({super.key});
@@ -267,6 +269,17 @@ class _AddTaskState extends ConsumerState<AddTask> {
       projectId: _selectedProject!.id,
     );
 
-    print(newTask.toJson());
+    // Using Riverpod to add the new task to the state
+    final taskNotifier = ref.read(taskProvider.notifier);
+    taskNotifier.addTask(newTask);
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          "Task \"${newTask.title}\" added to project \"${_selectedProject!.name}\" successfully!",
+        ),
+      ),
+    );
+    context.go("/");
   }
 }
