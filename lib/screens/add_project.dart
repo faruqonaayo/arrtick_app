@@ -61,6 +61,7 @@ class _AddProjectState extends ConsumerState<AddProject> {
           Form(
             key: _formKey,
             child: Column(
+              spacing: 16,
               children: [
                 TextFormField(
                   initialValue: _enteredName,
@@ -75,7 +76,6 @@ class _AddProjectState extends ConsumerState<AddProject> {
                     _enteredName = newValue!;
                   },
                 ),
-                const SizedBox(height: 16),
                 TextFormField(
                   initialValue: _enteredDescription,
                   decoration: const InputDecoration(labelText: 'Description'),
@@ -105,7 +105,8 @@ class _AddProjectState extends ConsumerState<AddProject> {
                     IconButton(
                       onPressed: () async {
                         var today = DateTime.now();
-                        final response = await _presentDatePicker(
+                        final response = await presentDatePicker(
+                          context,
                           today,
                           DateTime(2100),
                         );
@@ -135,7 +136,8 @@ class _AddProjectState extends ConsumerState<AddProject> {
                     IconButton(
                       onPressed: () async {
                         var today = DateTime.now();
-                        final response = await _presentDatePicker(
+                        final response = await presentDatePicker(
+                          context,
                           today,
                           DateTime(2100),
                         );
@@ -166,14 +168,6 @@ class _AddProjectState extends ConsumerState<AddProject> {
           ),
         ],
       ),
-    );
-  }
-
-  Future<DateTime?> _presentDatePicker(DateTime start, DateTime end) async {
-    return await showDatePicker(
-      context: context,
-      firstDate: start,
-      lastDate: end,
     );
   }
 

@@ -8,6 +8,8 @@ class ProjectNotifier extends Notifier<List<Project>> {
     return _dummyProjects;
   }
 
+  List<Project> get allProjects => state;
+
   void addProject(Project project) {
     state = [...state, project];
   }

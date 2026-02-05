@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:arrtick_app/providers/provider.dart';
+import 'package:arrtick_app/screens/add_task.dart';
 import 'package:arrtick_app/providers/dark_mode_provider.dart';
 import 'package:arrtick_app/screens/project_details.dart';
 import 'package:arrtick_app/screens/settings.dart';
@@ -45,6 +46,7 @@ class ArrtickApp extends ConsumerWidget {
           return AddProject(projectId: projectId);
         },
       ),
+      GoRoute(path: "/task/new", builder: (context, state) => const AddTask()),
       GoRoute(path: "/settings", builder: (context, state) => const Settings()),
     ],
   );

@@ -1,10 +1,11 @@
+
 class Task {
   final String id;
   final String title;
   final String note;
   final DateTime startDate;
-  final DateTime startTime;
-  final DateTime endTime;
+  final String startTime;
+  final String endTime;
   final bool isChecked;
   final String priority;
   final String projectId;
@@ -27,8 +28,8 @@ class Task {
       title: json['title'],
       note: json['note'],
       startDate: DateTime.parse(json['startDate']),
-      startTime: DateTime.parse(json['startTime']),
-      endTime: DateTime.parse(json['endTime']),
+      startTime: json['startTime'],
+      endTime: json['endTime'],
       isChecked: json['isChecked'],
       priority: json['priority'],
       projectId: json['projectId'],
@@ -41,8 +42,8 @@ class Task {
       'title': title,
       'note': note,
       'startDate': startDate.toIso8601String(),
-      'startTime': startTime.toIso8601String(),
-      'endTime': endTime.toIso8601String(),
+      'startTime': startTime,
+      'endTime': endTime,
       'isChecked': isChecked,
       'priority': priority,
       'projectId': projectId,

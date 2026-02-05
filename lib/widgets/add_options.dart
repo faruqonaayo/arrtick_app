@@ -34,6 +34,8 @@ class AddOptions extends StatelessWidget {
               trailing: Icon(Icons.chevron_right),
               onTap: () {
                 // Handle add new task action
+                Navigator.of(context).pop(); // Close the bottom sheet
+                context.push("/task/new");
               },
             ),
             SizedBox(height: 8),
